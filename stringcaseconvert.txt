@@ -1,0 +1,16 @@
+def swap_case(s):
+     words = list(s)
+     string1 = ""
+     for word in words:
+        if word.isupper() == True:
+               string1 = string1 + word.lower()
+               
+        else:
+             string1 = string1 +  word.upper()  
+     return string1              
+             
+
+if __name__ == '__main__':
+    s = raw_input()
+    result = swap_case(s)
+    print result

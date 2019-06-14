@@ -1,0 +1,33 @@
+Sub compareCOLs()
+    Dim listA As Variant, listB As Variant, listC As Variant
+    Dim a As Long, b As Long, c As Long, d As Long, e As Long
+
+    With Worksheets("sheet2")
+        listA = .Range(.Cells(2, "A"), .Cells(.Rows.Count, "A").End(xlUp)).Value2
+        listB = .Range(.Cells(2, "B"), .Cells(.Rows.Count, "B").End(xlUp)).Value2
+        ReDim listC(1 To (UBound(listA, 1) + UBound(listB, 1)), 1 To 3)
+
+        'COUNTIF-style processing
+        For a = LBound(listA, 1) To UBound(listA, 1)
+            If IsError(Application.Match(listA(a, 1), listB, 0)) Then
+                c = c + 1
+                listC(c, 1) = listA(a, 1)
+            Else
+                e = e + 1
+                listC(e, 3) = listA(a, 1)
+            End If
+        Next a
+        For b = LBound(listB, 1) To UBound(listB, 1)
+            If IsError(Application.Match(listB(b, 1), listA, 0)) Then
+                d = d + 1
+                listC(d, 2) = listB(b, 1)
+            End If
+        Next b
+
+        'write results back to the worksheet
+        .Cells(1, "C").Resize(1, 3) = Array("Files in A that are NOT in B", _
+                                            "Files in B that are Not in A", _
+                                            "Matching Files")
+        .Cells(2, "C").Resize(UBound(listC, 1), UBound(listC, 2)) = listC
+    End With
+End Sub

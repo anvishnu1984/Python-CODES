@@ -1,0 +1,42 @@
+import pandas as pd
+import os
+from pandas import ExcelWriter
+
+from pandas import ExcelFile
+
+
+def change_column_order(df, col_name, index):
+    cols = df.columns.tolist()
+    cols.remove(col_name)
+    cols.insert(index, col_name)
+    return df[cols]
+
+def split_df(dataframe, col_name, sep):
+    orig_col_index = dataframe.columns.tolist().index(col_name)
+    orig_index_name = dataframe.index.name
+    orig_columns = dataframe.columns
+    dataframe = dataframe.reset_index()  # we need a natural 0-based index for proper merge
+    index_col_name = (set(dataframe.columns) - set(orig_columns)).pop()
+    df_split = pd.DataFrame(
+        pd.DataFrame(dataframe[col_name].str.split(sep).tolist())
+        .stack().reset_index(level=1, drop=1), columns=[col_name])
+    df = dataframe.drop(col_name, axis=1)
+    df = pd.merge(df, df_split, left_index=True, right_index=True, how='inner')
+    df = df.set_index(index_col_name)
+    df.index.name = orig_index_name
+    # merge adds the column to the last place, so we need to move it back
+    return change_column_order(df, col_name, orig_col_index)
+317799
+
+
+print(os.getcwd())
+
+
+df = pd.read_excel (r'C:\Users\nanjapa\Desktop\GROUP-COMPARISON\individual-license-2904.xlsx',sheet_name="Ozchase"))
+
+
+df4 = split_df(df, 'LICENCE_TYPE_NAME-V', ' ')
+
+
+
+df4.to_excel(r"C:\Users\nanjapa\Desktop\GROUP-COMPARISON\individual-license\new.xlsx")

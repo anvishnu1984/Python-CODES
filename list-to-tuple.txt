@@ -1,0 +1,13 @@
+a = int(raw_input())
+b= int(raw_input())
+c = a/b
+d = a%b
+print a/b
+print a%b
+
+l = [1,2]
+l[0] = c
+l[1] = d
+tuple = tuple (l)
+
+print tuple

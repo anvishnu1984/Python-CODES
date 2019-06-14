@@ -1,0 +1,12 @@
+import pandas as pd
+from pandas import ExcelWriter
+
+from pandas import ExcelFile
+
+
+result = pd.read_excel(r'C:\Users\bennets\Desktop\Ashok\Table.xlsx', sheet_name="Sheet1")
+result2 = pd.read_excel(r'C:\Users\bennets\Desktop\Ashok\Table.xlsx', sheet_name="Sheet2")
+result3 = pd.merge(result,result2,on='ID')
+
+result3.to_excel(r'C:\Users\bennets\Desktop\Ashok\Table1.xlsx',index=False)
+print(result3)

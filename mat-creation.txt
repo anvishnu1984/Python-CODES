@@ -1,0 +1,6 @@
+N = 7
+M = 21
+N, M = map(int, raw_input().strip().split(" "))
+for i in range(0,N):
+    l = 'WELCOME' if i == int(N/2) else ('.|.'*(N-(2*abs(i-int(N/2)))))          
+    print(l.center(M,'-'))

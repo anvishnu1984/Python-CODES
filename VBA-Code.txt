@@ -1,0 +1,21 @@
+
+
+Sub sbFindDuplicatesInColumn()
+    Dim lastRow As Long
+    Dim matchFoundIndex As Long
+    Dim iCntr As Long
+    lastRow = Range("A65000").End(xlUp).Row
+
+    For iCntr = 1 To lastRow
+    If Cells(iCntr, 1) <> "" Then
+        matchFoundIndex = WorksheetFunction.Match(Cells(iCntr, 1), Range("A1:A" & lastRow), 0)
+        If iCntr <> matchFoundIndex Then
+            Cells(iCntr, 2) = "Duplicate"
+       End If
+    End If
+    Next
+End Sub
+
+Private Sub CommandButton1_Click()
+Range("C1").Value = "Hello"
+End Sub

@@ -1,0 +1,22 @@
+from heapq import nlargest
+
+
+
+
+namelist = []
+scorelist = []
+listOfKeys = []
+for _ in range(int(raw_input())):
+    name = raw_input()
+    score = float(raw_input())
+    namelist.append(name)
+    scorelist.append(score)
+my_dict = dict(zip(namelist, scorelist))
+secondhighestvalue=  sorted(scorelist)[1]
+
+
+keyList = [ k for k in my_dict.keys() if my_dict[k] == secondhighestvalue ]
+# show results
+keylist1 = sorted(keyList)
+for elem in keylist1:
+        print elem 

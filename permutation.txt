@@ -1,0 +1,11 @@
+import re
+import string
+from itertools import permutations
+if __name__ == '__main__':
+ n  =  raw_input().split()
+ word = n[0]
+ count = int(n[1])
+ 
+ 
+ for c in permutations(sorted(word), int(count)):
+    print(''.join(c))

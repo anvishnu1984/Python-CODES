@@ -1,0 +1,8 @@
+import calendar
+import time 
+import datetime
+
+dt = raw_input()
+month, day, year = (int(x) for x in dt.split(' '))    
+ans = datetime.date(year, month, day)
+print ans.strftime("%A").upper()

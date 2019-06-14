@@ -1,0 +1,23 @@
+import pandas as pd
+from pandas import ExcelWriter
+
+from pandas import ExcelFile
+
+
+df = pd.read_excel(r'C:\Users\bennets\Desktop\Ashok\Mike\group_member_data_2019-Mar.xlsx', sheet_name="group_member_data_2019-Mar")
+
+
+
+df = df.groupby(['GROUP_ID','INDICATOR']).size().to_frame('count').reset_index()
+
+''''(['GROUP_ID', as_index=False]).agg({  'DATE_JOINED': ['count']})
+
+
+
+df = df.sort_values(by=['First Name', 'Mid Name', 'Last Name', 'Address Line 1', 'Suburb', 'State', 'Postcode'])
+
+df = df.drop_duplicates(subset=['First Name', 'Mid Name', 'Last Name', 'Address Line 1', 'Suburb', 'State', 'Postcode'], keep='last')'''
+
+
+
+df.to_excel(r'C:\Users\bennets\Desktop\Ashok\Mike\groupby1.xlsx',index=False)

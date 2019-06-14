@@ -1,0 +1,16 @@
+import pandas as pd
+from pandas import ExcelWriter
+
+from pandas import ExcelFile
+
+
+result = pd.read_excel(r'C:\Users\nanjapa\Desktop\person\person_and_licence_data(cleansetemplate)(Update).xlsx', sheet_name="Sheet3")
+
+result2 = pd.read_excel(r'C:\Users\nanjapa\Desktop\person\person_and_licence_data(cleansetemplate)(Update).xlsx', sheet_name="Sheet2")
+result3 = result2.merge(result,on='PERSON_SEQ',how='left')
+result4 = result3[result3.PERSON_SEQ.isin([200000, 200001])]
+
+result4.to_excel(r'C:\Users\nanjapa\Desktop\person\inclause.xlsx',index=False)
+
+
+#result3.to_excel(r'C:\Users\nanjapa\Desktop\person\joined-person.xlsx',index=False)

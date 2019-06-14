@@ -1,0 +1,17 @@
+import pandas as pd
+import numpy as np
+from pandas import ExcelWriter
+
+from pandas import ExcelFile
+
+
+df = pd.read_excel(r'C:\Users\bennets\Desktop\Ashok\Python-Code\Column-compare.xlsx', sheet_name="Sheet1")
+df['three'] = df.one.eq(pd.to_numeric(df.two, errors='coerce'))        ########COMPARES NUMBERS ONLY############
+
+df['four'] = np.where(df['one'] == df['two'], 'true', 'false')      #######COMPARE NUMBER AND STRING #################
+print (df)
+
+
+
+
+df.to_excel(r'C:\Users\bennets\Desktop\Ashok\Python-Code\Col-cmp-rslt.xlsx',index=False)
