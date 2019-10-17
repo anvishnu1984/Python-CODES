@@ -1,0 +1,48 @@
+import dash as dash
+import dash_core_components as dcc
+from plotly.offline import iplot
+import plotly.graph_objs as go
+import matplotlib.pyplot as goe
+import dash_html_components as html
+import plotly
+import plotly.plotly as py
+plotly.tools.set_credentials_file(username='ashok.nanjappa.gowda', api_key='wzxIpdvUTnlBh6qgrZRq')
+import numpy as np
+import pandas as pd
+from pandas import ExcelWriter
+
+from pandas import ExcelFile
+
+
+
+app = dash.Dash()
+ra = pd.read_excel(r"C:\Users\nanjapa\Desktop\JULY\july10\Swabs.xlsx", sheet_name="Sheet1")
+
+trace = go.Scatter(
+                x=ra.SampCtxTypeDesc,
+                y=ra.VenueDesc,
+                mode='markers',
+               marker = dict(
+                   size = 10,
+                   color = 'rgba(152, 0, 0, .8)',
+                    line = dict(
+                    width = 2,
+                    color = 'rgb(0, 0, 0)'
+                )
+               )
+       )
+
+
+data = [trace]
+layout = dict(title='Styled Scatter',
+              yaxis=dict(zeroline=False),
+              xaxis=dict(zeroline=False)
+              )
+
+
+fig = dict(data=data, layout=layout)
+py.iplot(fig, filename='styled-scatter')
+
+
+
+

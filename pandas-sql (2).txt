@@ -1,0 +1,50 @@
+In [1]: import sas7bdat as sas
+ 
+In [2]: import pandas as pd
+ 
+In [3]: import pandasql as pdsql
+ 
+In [4]: data = sas.SAS7BDAT("accepts.sas7bdat")
+ 
+In [5]: df = data.toDataFrame()
+ 
+In [6]: pysql = lambda q: pdsql.sqldf(q, globals())
+ 
+In [7]: ### SELECT ###
+ 
+In [8]: str1 = "select bureau_score, ltv from df where bureau_score < 600 and ltv > 100 limit 3;"
+ 
+In [9]: df1 = pysql(str1)
+ 
+In [10]: df1
+Out[10]: 
+   bureau_score  ltv
+0           590  103
+1           575  120
+2           538  113
+ 
+In [11]: ### AGGREGATE ###
+ 
+In [12]: str2 = "select ltv, min(bureau_score) as min_score, max(bureau_score) as max_score from df group by ltv order by ltv DESC;"
+ 
+In [13]: df2 = pysql(str2);
+ 
+In [14]: df2.head(3)
+Out[14]: 
+   ltv  min_score  max_score
+0  176        709        709
+1  168        723        723
+2  167        688        688
+ 
+In [15]: ### JOIN ###
+ 
+In [16]: str3 = "select b.*, a.bureau_score from df a inner join df2 b on a.ltv = b.ltv order by ltv DESC;"
+ 
+In [17]: df3 = pysql(str3)
+ 
+In [18]: df3.head(3)
+Out[18]: 
+   ltv  min_score  max_score  bureau_score
+0  176        709        709           709
+1  168        723        723           723
+2  167        688        688           688

@@ -1,0 +1,26 @@
+import pandas as pd
+import geocoder
+
+
+def geographylocation(x):
+    try:
+     result = geocoder.mapquest(x, key='QpqXFlb7ns4f9WCRDbdOEtjnY9gGTkbR')
+     location = None
+    # you can avoid some of these error by adding this kind of check
+     if (result.address is not None):
+        print(result.address, result.latlng)
+        return (result.address, result.latlng)
+    except  KeyError:
+        return ("invalid","invalid")
+
+
+result1 = pd.read_excel(r'C:\Users\nanjapa\Desktop\September\September25\registered-custodians1.xlsx',
+                        sheet_name="seeintableau")
+'''modDfObj = result1.apply(func)'''
+modDfObj = result1['FULLADDRESS'].apply(geographylocation)
+
+path = r'C:\Users\nanjapa\Desktop\September\September25\mapquestresult.xlsx'
+writer = pd.ExcelWriter(path, engine='openpyxl')
+modDfObj.to_excel(writer, 'sheet1', index=False)
+modDfObj.to_excel(writer, 'sheet2', index=False)
+writer.save()

@@ -1,0 +1,1 @@
+pandas.merge(df1, df2, how='left', left_on=['id_key'], right_on=['fk_key'])

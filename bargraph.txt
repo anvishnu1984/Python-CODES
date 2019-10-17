@@ -1,0 +1,13 @@
+import matplotlib.pyplot as plt
+
+Country = ['Bookmaker', 'BookmakerClerk', 'Attendant', 'Breeder', 'OwnerTrainer', 'Public Trainer', 'StudMaster']
+GDP_Per_Capita = [81, 59, 49, 62, 58, 67, 57]
+
+xAxis = [i + 0.5 for i, _ in enumerate(Country)]
+
+plt.bar(xAxis, GDP_Per_Capita, color='teal')
+plt.title('Licence type versus Percentage of renewals', fontsize=14)
+plt.xlabel('Licence Type', fontsize=14)
+plt.ylabel('Percentage of licence renewed', fontsize=14)
+plt.xticks([i + 0.5 for i, _ in enumerate(Country)], Country)
+plt.show()

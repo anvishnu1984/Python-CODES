@@ -1,0 +1,7 @@
+-NSW-ATT-BKM-BKC'!A2:$BO$27644,11,0)
+
+
+=VLOOKUP(A2,'licence-holders-NSW-ATT-BKM-BKC'!$A2:$BO$27644,11,0)
+
+200852
+

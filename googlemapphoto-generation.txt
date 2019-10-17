@@ -1,0 +1,20 @@
+import gmplot
+
+latitude_list = [-28.7353811,-28.730370,-29.0335907]
+
+longitude_list = [152.6175965,153.405210,152.8357798]
+
+gmap3 = gmplot.GoogleMapPlotter(-28.7353811,
+                                152.6175965, 13)
+
+# scatter method of map object
+# scatter points on the google map
+gmap3.scatter(latitude_list, longitude_list, '# FF0000',
+              size=40, marker=False)
+
+# Plot method Draw a line in
+# between given coordinates
+gmap3.plot(latitude_list, longitude_list,
+           'cornflowerblue', edge_width=2.5)
+
+gmap3.draw('C:/Users/nanjapa/Desktop/October/october10/map13.html')

@@ -1,0 +1,53 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plot
+
+import datetime as dt
+from pandas import ExcelWriter
+from pandas import ExcelFile
+
+
+result1 = pd.read_excel(r'C:\Users\nanjapa\Desktop\August\August8\Participantsrenewed30062019.xls', sheet_name="sheet1")
+result2 = pd.read_excel(r'C:\Users\nanjapa\Desktop\August\August8\person-onegov-nsw.xlsx', sheet_name="sheet1")
+result3 = pd.merge(result1,result2,on='PERSONID')
+
+result3['Age'] = pd.to_datetime('now') - result3['DateofBirth']
+result3['Age'] = round(result3['Age'] /  np.timedelta64(1, 'Y'))
+
+result3.loc[result3.Age <= 25, 'Age-Group'] = '0to25'
+result3.loc[(result3.Age > 25) & (result3.Age <= 45) , 'Age-Group'] = '26to45'
+result3.loc[(result3.Age > 45) & (result3.Age <= 65) , 'Age-Group'] = '46to65'
+result3.loc[result3.Age > 65  , 'Age-Group'] = '65plus'
+
+
+df_grp = result3.groupby(['Licence Type', 'Age-Group'])
+df_grp = df_grp.size().reset_index(name='count')
+df_grp1 = result3.groupby(['Licence Type', 'Age-Group', 'Licence Class'])
+df_grp1 = df_grp1.size().reset_index(name= 'count')
+
+#result4 = result3.groupby(['Licence Type' , 'Age-Group'])['Licence Type'].count()
+#df.groupby(['revenue','session','user_id'])['user_id'].count()
+
+#result3['now'] = pd.datetime.now()
+#result3['calculated-age'] = pd['now'].dt.date - pd['DateofBirth']
+
+
+#result3 = pd.merge(result1, result2, how='inner', left_on=['TRAINER_ID'], right_on=['PERSONID'])
+result3.to_excel(r'C:\Users\nanjapa\Desktop\August\August8\joineddata3.xlsx',index=False)
+
+df_grp.to_excel(r'C:\Users\nanjapa\Desktop\August\August8\aggregated-data1.xlsx',index=False)
+
+df_grp1.to_excel(r'C:\Users\nanjapa\Desktop\August\August8\aggregated-data1.xlsx',index=False)
+
+path = r'C:\Users\nanjapa\Desktop\August\August8\aggregated-data1.xlsx'
+writer = pd.ExcelWriter(path, engine='openpyxl')
+df_grp.to_excel(writer, 'sheet1', index=False)
+df_grp1.to_excel(writer, 'sheet2', index=False)
+writer.save()
+
+
+
+df_grp.plot(kind='bar',x='Licence Type',y='count')
+
+plot.show()
+

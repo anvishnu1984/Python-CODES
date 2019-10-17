@@ -1,0 +1,33 @@
+import pandas as pd
+from pandas import ExcelWriter
+from pandas import ExcelFile
+
+
+result1 = pd.read_excel(r'C:\Users\nanjapa\Desktop\September\September4\ZD97044-Results-OG.xlsx', sheet_name="Sheet1")
+result2 = pd.read_excel(r'C:\Users\nanjapa\Desktop\September\September4\race-audit-injury-20180701-20190630-oz.xlsx', sheet_name="race-audit-injury-20180701-2019")
+
+
+result3 = result1.groupby(['MeetingDate','TrackHeld']).size().to_frame('count').reset_index()
+
+result3['TrackHeldInitials'] = result3['TrackHeld'].str[:5]
+
+
+result3.to_excel(r'C:\Users\nanjapa\Desktop\September\September4\ZD-OG-Result.xlsx',index=False)
+
+result4 = result2.groupby(['MeetingDate','TrackHeld'])['Starters'].sum().reset_index()
+
+result4['TrackHeld'] = result4['TrackHeld'].str.upper()
+
+result4.to_excel(r'C:\Users\nanjapa\Desktop\September\September4\race-audit-Result.xlsx',index=False)
+
+result4['TrackHeldInitials'] = result4['TrackHeld'].str[:5]
+
+
+result5 = result4.merge(result3,on=['MeetingDate','TrackHeldInitials'],how='inner')
+
+result5.to_excel(r'C:\Users\nanjapa\Desktop\September\September4\Final.xlsx',index=False)
+
+
+
+'''result3 = pd.merge(result1,result2,on='OWNER_GROUP_ID')
+result3 = result3.groupby(['OWNER_GROUP_ID']).size().to_frame('count').reset_index() '''

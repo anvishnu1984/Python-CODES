@@ -1,0 +1,130 @@
+from selenium import webdriver
+import getpass
+
+import time
+from os import walk
+
+from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by  import  By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
+
+
+'''usr = input('Enter user id :')
+pwd = getpass.getpass(prompt='Enter password ')'''
+
+usr = 'GWI-ANANJ'
+pwd = 'GLS-123456'
+
+print ('You entered:', pwd)
+
+options=webdriver.ChromeOptions()
+options.add_argument("download.default_directory=C:/Users/nanjapa/Desktop/DailyFiles")
+driver = webdriver.Chrome(options=options, executable_path= 'C:/Users/nanjapa/.PyCharmCE2019.1/config/scratches/chromedriver.exe')
+
+
+
+
+'''driver = webdriver.Chrome("C:/Users/nanjapa/.PyCharmCE2019.1/config/scratches/chromedriver.exe")'''
+
+'''driver.get('https://sbl.onegov.nsw.gov.au/gls/start.swe')'''
+driver.get('https://sbl.onegov.nsw.gov.au/gls/start.swe?SWECmd=GotoView&SWEView=GLS+All+Individuals+List+View&SWERF=1&SWEHo=sbl.onegov.nsw.gov.au&SWEBU=1')
+
+
+
+
+
+
+wait = WebDriverWait(driver, 10)
+wait = WebDriverWait(driver, 10)
+username_box = driver.find_element_by_id('s_swepi_1')
+
+
+
+username_box.send_keys(usr)
+wait = WebDriverWait(driver, 10)
+password_box = driver.find_element_by_id('s_swepi_2')
+wait = WebDriverWait(driver, 10)
+password_box.send_keys(pwd)
+wait = WebDriverWait(driver, 10)
+wait = WebDriverWait(driver, 10)
+login_btn = driver.find_element_by_id('s_swepi_22')
+wait = WebDriverWait(driver, 3000)
+login_btn.submit()
+wait = WebDriverWait(driver, 3000)
+
+
+driver.set_page_load_timeout(2000000)
+driver.maximize_window()
+
+
+
+'''wait = WebDriverWait(driver, 100)
+wait = WebDriverWait(driver, 100)
+buton = driver.find_element_by_xpath('//*[@id="s_1_1_10_0_Ctrl"]')
+buton.click()'''
+
+querybtn = WebDriverWait(driver, 50).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='s_1_1_10_0_Ctrl']")));
+querybtn.click()
+
+searchbtn = WebDriverWait(driver, 50).until(EC.visibility_of_element_located((By.XPATH,"//*[@id='s_1_1_7_0_Ctrl']")));
+searchbtn.click()
+wait = WebDriverWait(driver, 600000)
+
+time.sleep(10)
+
+
+menuelement = wait.until(EC.visibility_of_element_located((By.XPATH, '//*[@id="s_0"]/li[1]/a')))
+actions = ActionChains(driver)
+actions.move_to_element(menuelement).perform()
+actions.click(menuelement).perform()
+
+dropdownelement = wait.until(EC.visibility_of_element_located((By.XPATH, '//*[@id="ui-id-16"]/a')))
+actions1 = ActionChains(driver)
+actions1.move_to_element(dropdownelement).perform()
+actions1.click(dropdownelement).perform()
+
+
+'''Below 93 to 96 only if you want to select 1 row'''
+currentrow =wait.until(EC.visibility_of_element_located((By.XPATH, "//input[@value='Only Current Row']")))
+actions2 = ActionChains(driver)
+actions2.move_to_element(currentrow).perform()
+actions2.click(currentrow).perform()
+
+
+
+time.sleep(6)
+downloadindividuals =  WebDriverWait(driver, 100000).until(EC.visibility_of_element_located((By.XPATH,'//*[@id="s_3_1_62_0"]')));
+downloadindividuals.click()
+
+'''menuelement = driver.find_element_by_xpath('//*[@id="s_0"]/li[1]/a')
+dropdownelement = driver.find_element_by_xpath('//*[@id="ui-id-16"]/a')
+wait = WebDriverWait(driver, 600000)
+actions = ActionChains(driver)
+actions.move_to_element(menuelement).perform()
+
+actions.click(menuelement).perform()
+wait = WebDriverWait(driver, 600000)
+actions1 = ActionChains(driver)
+
+actions1.move_to_element(dropdownelement).perform()
+
+actions1.click(dropdownelement).perform()
+
+downloadindividuals =  WebDriverWait(driver, 100000).until(EC.visibility_of_element_located((By.XPATH,'//*[@id="s_3_1_62_0"]')));
+downloadindividuals.click()'''
+
+
+
+
+
+
+
+
+
+
+

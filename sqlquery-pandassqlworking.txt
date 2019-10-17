@@ -1,0 +1,66 @@
+import pandas as pd
+import pandasql as pdsql
+import pysqldf
+
+
+
+
+df = pd.read_excel(r'C:\Users\nanjapa\Desktop\August\August8\Extractrequired\stm.xlsx', sheet_name="sheet1")
+
+pysqldf = lambda q: pdsql.sqldf(q, globals())
+
+str1 = "select * from df  limit 3;"
+df1 = pysqldf(str1)
+print(df1)
+
+###########################################################################################
+Further enhance it by joining 2 dataframe as given below.Till above line it is working below are all enhancement to join 2 tables using dataframes.
+##########################################################################################
+example1:
+"select * from df where booked_inspect_date > '2018-10-31 00:00:00.000000' ;"
+
+"select * from df where (CURRENT_DATE - booked_inspect_date ) > 3 ;"
+
+"select * from df where Cast ((JulianDay(CURRENT_DATE) - JulianDay(booked_inspect_date )) As Integer)  > 760;"  days difference  in sqlite3 , python
+
+str2 = "select max(booked_inspect_date) from df ;" --pic maximum date from the frame.
+
+########################################################################################
+
+In [8]: str1 = "select bureau_score, ltv from df where bureau_score < 600 and ltv > 100 limit 3;"
+ 
+In [9]: df1 = pysql(str1) 
+ 
+In [10]: df1
+Out[10]: 
+   bureau_score  ltv
+0           590  103
+1           575  120
+2           538  113
+ 
+In [11]: ### AGGREGATE ###
+ 
+In [12]: str2 = "select ltv, min(bureau_score) as min_score, max(bureau_score) as max_score from df group by ltv order by ltv DESC;"
+ 
+In [13]: df2 = pysql(str2);
+ 
+In [14]: df2.head(3)
+Out[14]: 
+   ltv  min_score  max_score
+0  176        709        709
+1  168        723        723
+2  167        688        688
+ 
+In [15]: ### JOIN ###
+ 
+In [16]: str3 = "select b.*, a.bureau_score from df a inner join df2 b on a.ltv = b.ltv order by ltv DESC;"
+ 
+In [17]: df3 = pysql(str3)
+ 
+In [18]: df3.head(3)
+Out[18]: 
+   ltv  min_score  max_score  bureau_score
+0  176        709        709           709
+1  168        723        723           723
+2  167        688        688           688
+#########################################################################################################
