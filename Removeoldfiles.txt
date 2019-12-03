@@ -1,0 +1,14 @@
+import os, re
+import datetime as dt
+import shutil
+
+def purge(dir, pattern):
+    for f in os.listdir(dir):
+        if re.search(pattern, f):
+            os.remove(os.path.join(dir, f))
+
+
+purge('C:/Users/nanjapa/Desktop/DailyFiles', 'GWIC Reports')
+purge('C:/Users/nanjapa/Desktop/DailyFiles', 'InterstateResults')
+
+

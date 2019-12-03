@@ -1,0 +1,48 @@
+import os
+import datetime
+import pandas as pd
+import  zipfile36 as zipfile
+
+
+
+
+# <><><><><><><><><><>  Get Today's Date  <><><><><><><><><><>
+today = datetime.date.today()
+today = str(today)
+print (today)
+
+t = today[2:10]
+print (t)
+t = t.split("-")
+result = t[1] + "-" + t[2].lstrip("0") + "-" + t[0]
+print (result)
+
+
+
+# <><><><><><><><><><>  Get Today's Files  <><><><><><><><><><>
+folder = "C:/Users/nanjapa/Desktop/DailyFiles"
+folderContent = os.listdir(folder)
+eligibleFiles = []
+
+
+for i, folder in enumerate(folderContent):  # or -> if today in file
+           if result in folder.split():
+               eligibleFiles.append(folder)
+print(eligibleFiles)
+elegfiles = ''.join(eligibleFiles)
+path_to_zip_file = "C:/Users/nanjapa/Desktop/DailyFiles" + "/" + str(elegfiles)
+print("hi")
+print (path_to_zip_file)
+directory_to_extract_to = "C:/Users/nanjapa/Desktop/DailyFiles"
+print("hi")
+with zipfile.ZipFile(path_to_zip_file, 'r') as zip_ref:
+                                      zip_ref.extractall(directory_to_extract_to)
+
+xlsfile = pd.read_html(r'C:/Users/nanjapa/Desktop/DailyFiles/GWIC csq activity report daily.xls')
+xlsfile=xlsfile[0]
+print (xlsfile)
+
+'''p.save_book_as(file_name='C:/Users/nanjapa/Desktop/DailyFiles/GWIC csq activity report daily.xls',
+               dest_file_name='C:/Users/nanjapa/Desktop/DailyFiles/GWIC csq activity report daily.xlsx')'''
+
+xlsfile.to_excel(r'C:/Users/nanjapa/Desktop/DailyFiles/GWIC csq activity report daily.xlsx',index=False)

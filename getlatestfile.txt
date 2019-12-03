@@ -1,0 +1,24 @@
+import subprocess
+import glob
+import os
+import shutil
+
+def get_latest_file(path, *paths):
+    """Returns the name of the latest (most recent) file
+    of the joined path(s)"""
+    fullpath = os.path.join(path, *paths)
+    files = glob.glob(fullpath)  # You may use iglob in Python3
+    if not files:                # I prefer using the negation
+        return None                      # because it behaves like a shortcut
+    latest_file = max(files, key=os.path.getctime)
+    _, filename = os.path.split(latest_file)
+    return filename
+
+
+
+
+fname = get_latest_file('C:/Users/nanjapa/Desktop/DailyFiles', '*GWIC Reports.xlsx')
+print (fname)
+
+newPath = shutil.copy('C:/Users/nanjapa/Desktop/DailyFiles/'+fname, 'C:/Users/nanjapa/Desktop/DailyFiles/GWIC Reports.xlsx')
+

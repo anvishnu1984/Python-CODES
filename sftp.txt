@@ -1,0 +1,44 @@
+import pysftp
+import shutil
+import os
+import fnmatch
+import datetime
+import fnmatch
+
+
+myHostname = "sftp.onegov.nsw.gov.au"
+myUsername = "pe.gls.local\gwic-ext-print"
+myPassword = "GW-135790"
+today = datetime.date.today()
+today = str(today)
+t = today.split("-")
+today2 = t[0] + "" + t[1] + "" + t[2]
+print (today2)
+#today2 = "20191120"
+
+with pysftp.Connection(host=myHostname, username=myUsername, password=myPassword) as sftp:
+    print ("Connection succesfully stablished ... ")
+    final_path = r"\\amaprdolgrfp1c\users$\nanjapa\CardPrinting"
+    localFilePath = r'C:/Users/nanjapa/Desktop/CardPrinting/'
+    for filename in sftp.listdir('/epout/'):
+          if fnmatch.fnmatch(filename, '*' + today2 + '*' + '.csv'):
+                print  (filename)
+                sftp.get('/epout/' + filename, localFilePath + filename)
+
+
+    # Define the local path where the file will be saved
+    # or absolute "C:\Users\sdkca\Desktop\TUTORIAL.txt"
+
+
+    for filename in os.listdir(r'C:/Users/nanjapa/Desktop/CardPrinting/'):
+        if fnmatch.fnmatch(filename, '*' + today2 + '*' + '.csv'):
+            shutil.copy2(localFilePath + filename, final_path)
+
+
+
+
+
+
+
+
+
