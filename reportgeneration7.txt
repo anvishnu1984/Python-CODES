@@ -1,0 +1,190 @@
+import pandas as pd
+
+from pandas import ExcelWriter
+
+from pandas import ExcelFile
+
+
+from openpyxl import load_workbook
+
+
+
+
+
+
+
+'''pd.options.mode.chained_assignment = None'''
+
+result = pd.read_csv(r'H:\Desktop\6apr\reportautomation-eqfx-acnt.csv', engine = 'python')
+
+'''print( result.head())'''
+
+print (result.count())
+
+result2 = pd.read_csv(r'H:\Desktop\6apr\reportautomation-asic-acnt.csv', engine = 'python')
+df_custid_deregdate = result[['customer_id','Account_ID','Deregistered_date']]
+
+d1= df_custid_deregdate.dtypes
+print (d1)
+d1= result2.dtypes
+print(d1)
+
+df2 = result[result.customer_id.isin(result2.customer_id) == False]
+
+result3 = result2.merge(right=df_custid_deregdate , on = ['customer_id','Account_ID'] , how = 'left'   )
+
+print(result3.head())
+
+
+
+'''df2['Prod-Category'] = 'other'''''
+df3 = df2.copy()
+df3['Prod-Category'] = 'other'
+df3.loc[(df2['SystemCode'] == 'IBD') & (df2['ProductFamily'] == 'Term Deposit Accounts (AUD)'), 'Prod-Category'] = 'TD'
+df3.loc[(df2['SystemCode'] == 'VPS') & (df2['ProductFamily'] == 'Merchants'), 'Prod-Category'] = 'Merchant'
+df3.loc[ (len( df2['LINKEDCREDITCARD'] ) > 1 ) & (df2['Account_ID'].str[:2] =='CC') & (df2['SystemCode'] == 'VPS')      , 'Prod-Category'] = 'Credit Cards'
+df3.loc[  (df2['SystemCode'] == 'TBK') , 'Prod-Category'] = 'T&S'
+df3.loc[(df2['SystemCode'] == 'VPS') & (df2['ProductFamily'] != 'Merchants') &  ( df2['LINKEDCREDITCARD'].isnull()) , 'Prod-Category'] = 'Debit/Credit Card Facilities'
+
+df3.to_csv (r'H:\Desktop/13apr/New folder/indata-eqfxupdated.csv')
+
+df3orphandebitlistA = df3.copy()
+df3orphandebitlistB = df3.copy()
+df3orphancheckford = df3.copy()
+df3orphanlistE  = df3.copy()
+
+df3orphandebitlistA.loc[ (df3['ProductFamily'] == 'CorporateFacility')  & (df3['ProductName'] == 'MCD Everyday Facility') , 'OrphanListA'] = 'ListA'
+df3orphandebitlistA.loc[ (df3['ProductFamily'] == 'CorporateFacility')  & (df3['ProductName'] == 'Visa Everyday') , 'OrphanListA'] = 'ListA'
+df3orphandebitlistB.loc[ (df3['LINKEDCREDITCARD'] !=  '')  & (df3['LINKEDCCSTATUS'] != 'Z - Charge-off') , 'OrphanListB'] = 'ListB'
+print(df3orphandebitlistA.head()  )
+
+df3orphanlistC = df3orphandebitlistA[df3orphandebitlistA.customer_id.isin(df3orphandebitlistB.customer_id) == False]
+
+df3orphancheckford.loc[ (df3['ProductFamily'] != 'CorporateFacility')  & (df3['ProductName'] != 'MCD Everyday Facility') , 'OrphanListD'] = 'Listford'
+
+df3orphancheckford.loc[ (df3['ProductFamily'] != 'CorporateFacility')  & (df3['ProductName'] != 'Visa Everyday') , 'OrphanListD'] = 'Listford'
+
+df3orphanlistD = df3orphanlistC[df3orphanlistC.customer_id.isin(df3orphancheckford.customer_id) == True]
+
+df3orphanlistEremvacnt = df3orphandebitlistA[df3orphandebitlistA.customer_id.isin(df3orphanlistC.customer_id) == True]
+df3orphanlistEinclacnt = df3orphandebitlistA[df3orphandebitlistA.customer_id.isin(df3orphanlistC.customer_id) == False]
+df3orphanlistEremvacnt['incl/exculdeindicator'] = 'remove account'
+df3orphanlistEinclacnt['incl/exculdeindicator'] = 'include account'
+df3orphanlistEremvacnt.append(df3orphanlistEinclacnt)
+
+listA = df3orphandebitlistA['customer_id'].unique()
+listAcustid = pd.Series(listA)
+
+listB = df3orphandebitlistB['customer_id'].unique()
+
+'''df3orphandebitlistA.to_excel(r'H:\Desktop/6apr/New folder/orphanAfull.xlsx',sheet_name = 'listA',index= None, header= True)'''
+
+listAcustid.to_excel(r'H:\Desktop/13apr/New folder/orphanAeqfx.xlsx', sheet_name = 'listA')
+
+listBcustid=  pd.Series(listB)
+listBcustid.to_excel(r'H:\Desktop/13apr/New folder/orphanBeqfx.xlsx', sheet_name = 'listB')
+
+listC = df3orphanlistC['customer_id'].unique()
+listCcustid = pd.Series(listC)
+listCcustid.to_excel(r'H:\Desktop/13apr/New folder/orphanCeqfx.xlsx', sheet_name = 'listC')
+
+listD = df3orphanlistD['customer_id'].unique()
+listDcustid = pd.Series(listD)
+listDcustid.to_excel(r'H:\Desktop/13apr/New folder/orphanDeqfx.xlsx', sheet_name = 'listD')
+
+
+df3orphanlistEremvacnt.to_csv(r'H:\Desktop/13apr/New folder/orphanEeqfx.csv')
+
+
+
+result3['Prod-Category'] = 'other'
+result3.loc[(result3['SystemCode'] == 'IBD') & (result3['ProductFamily'] == 'Term Deposit Accounts (AUD)'), 'Prod-Category'] = 'TD'
+result3.loc[(result3['SystemCode'] == 'VPS') & (result3['ProductFamily'] == 'Merchants'), 'Prod-Category'] = 'Merchant'
+result3.loc[ (len( result3['LINKEDCREDITCARD'] ) > 1 ) & (result3['Account_ID'].str[:2] == 'CC') & (result3['SystemCode'] == 'VPS')      , 'Prod-Category'] = 'Credit Cards'
+result3.loc[  (result3['SystemCode'] == 'TBK') , 'Prod-Category'] = 'T&S'
+result3.loc[(result3['SystemCode'] == 'VPS') & (result3['ProductFamily'] != 'Merchants') &  ( result3['LINKEDCREDITCARD'].isnull()) , 'Prod-Category'] = 'Debit/Credit Card Facilities'
+
+
+
+
+
+result3.to_csv(r'H:\Desktop/13apr/New folder\indata2-asicupdated.csv')
+
+
+'''------------ORPHAN CARDS FOR ASIC-------------------------'''
+
+
+result3orphandebitlistA = result3.copy()
+result3orphandebitlistB = result3.copy()
+result3orphancheckford = result3.copy()
+result3orphanlistE  = result3.copy()
+
+result3orphandebitlistA.loc[   (result3['ProductFamily'] == 'Corporate Facility')  & (result3['ProductName'] =='MCD Everyday Facility' ) ,'OrphanListA'] = 'ListA'
+result3orphandebitlistA.loc[ (result3['ProductFamily'] == 'Corporate Facility')  & (result3['ProductName'] == 'Visa Everyday Facility') , 'OrphanListA'] = 'ListA'
+result3orphandebitlistB.loc[ (result3['LINKEDCREDITCARD'].notnull()  )  & ( result3['LINKEDCCSTATUS'] != 'Z - Charge-off') , 'OrphanListB'] = 'ListB'
+print(result3orphandebitlistA.head()  )
+
+result3orphanlistC = result3orphandebitlistA[result3orphandebitlistA.customer_id.isin(result3orphandebitlistB.customer_id) == False]
+
+
+result3orphancheckford.loc[ (result3['ProductFamily'] != 'CorporateFacility')  & (result3['ProductName'] != 'MCD Everyday Facility') , 'OrphanListD'] = 'Listford'
+
+result3orphancheckford.loc[ (result3['ProductFamily'] != 'CorporateFacility')  & (result3['ProductName'] != 'Visa Everyday') , 'OrphanListD'] = 'Listford'
+
+result3orphandebitlistDFinal = result3orphancheckford[result3orphancheckford.OrphanListD.isin(["Listford"])]
+
+'''result3orphanlistD = result3orphanlistC[result3orphanlistC.customer_id.isin(result3orphancheckford.customer_id) == True]'''
+
+result3orphanlistEremvacnt = result3orphandebitlistA[result3orphandebitlistA.customer_id.isin(result3orphanlistC.customer_id) == True]
+result3orphanlistEinclacnt = result3orphandebitlistA[result3orphandebitlistA.customer_id.isin(result3orphanlistC.customer_id) == False]
+result3orphanlistEremvacnt['incl/exculdeindicator'] = 'remove account'
+result3orphanlistEinclacnt['incl/exculdeindicator'] = 'include account'
+result3orphanlistEremvacnt.append(df3orphanlistEinclacnt)
+
+result3orphandebitlistAFinal = result3orphandebitlistA[result3orphandebitlistA.OrphanListA.isin(["ListA"])]
+listA = result3orphandebitlistAFinal['customer_id'].unique()
+listAcustid = pd.Series(listA)
+
+
+
+'''df3orphandebitlistA.to_excel(r'H:\Desktop/13apr/New folder/orphanAfull.xlsx',sheet_name = 'listA',index= None, header= True)'''
+
+listAcustid.to_excel(r'H:\Desktop/13apr/New folder/orphanAasic.xlsx', sheet_name = 'listA')
+
+result3orphandebitlistA.to_csv(r'H:\Desktop/13apr/New folder/orphanAasicfull.csv')
+
+result3orphandebitlistBFinal = result3orphandebitlistB[result3orphandebitlistB.OrphanListB.isin(["ListB"])]
+listB = result3orphandebitlistBFinal['customer_id'].unique()
+listBcustid=  pd.Series(listB)
+listBcustid.to_excel(r'H:\Desktop/13apr/New folder/orphanBasic.xlsx', sheet_name = 'listB')
+
+listC = list(set(listA) - set(listB))
+
+'''result3orphanlistC.to_csv(r'H:\Desktop/13apr/New folder/orphanCasicfull.csv')'''
+'''listC = result3orphanlistC['customer_id'].unique()'''
+listCcustid = pd.Series(listC)
+listCcustid.to_excel(r'H:\Desktop/13apr/New folder/orphanCasic.xlsx', sheet_name = 'listC')
+
+
+listD = result3orphandebitlistDFinal['customer_id'].unique()
+listD1= list(set(listD).intersection( set(listC) ))
+
+listDcustid = pd.Series(listD1)
+result3orphandebitlistDFinal.to_csv(r'H:\Desktop/13apr/New folder/orphanDasic-full.csv')
+listDcustid.to_excel(r'H:\Desktop/13apr/New folder/orphanDasic.xlsx', sheet_name = 'listD')
+
+
+result3orphanlistEremvacnt.to_csv(r'H:\Desktop/13apr/New folder/orphanEasic.csv')
+
+
+
+
+
+
+
+
+
+
+
+
+

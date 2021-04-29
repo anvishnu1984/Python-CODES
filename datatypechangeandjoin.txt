@@ -1,0 +1,32 @@
+import pandas as pd
+#import modin.pandas as pd
+from pandas import ExcelWriter
+
+from pandas import ExcelFile
+
+
+result = pd.read_excel(r'H:\Desktop\comparison\WBCBackbook_Part1_20210216.xlsx', sheet_name="WBC1")
+print(result.head())
+result2 = pd.read_excel(r'H:\Desktop\comparison\WBCBackbook_Part2_20210216.xlsx', sheet_name="WBC2")
+result3 = result.append(result2)
+
+print (result3.head())
+
+result4 = pd.read_excel(r'H:\Desktop\comparison\output\wbc_deregistered_list_from_equifax_20210224_part_1.xlsx', sheet_name="Part1")
+result5 = pd.read_excel(r'H:\Desktop\comparison\output\wbc_deregistered_list_from_equifax_20210224_part_2.xlsx', sheet_name="Part2")
+
+result6 = result4.append(result5)
+
+print (result6.head())
+
+print (result6.dtypes)
+print (result3.dtypes)
+
+result3.Company_name.astype(str)
+result6.Company_name.astype(str)
+
+result7 = pd.merge(result3.astype(str),result6.astype(str), outer = 'Company_name', how = 'outer')
+
+print (result7.count())
+
+result7.to_csv('H:\Desktop\comparison\output\eeesult1.csv')

@@ -1,0 +1,18 @@
+import pandas as pd
+from pandas import ExcelWriter
+
+from pandas import ExcelFile
+
+result = pd.read_excel(r'H:\Desktop\3mar\DRGD_ACN_179933.xlsx', sheet_name = "WBC_ACCT_LEVEL")
+print(result.head())
+
+result2 = pd.read_csv(r'H:\Desktop\3mar\wbc_deregistered_list_v3.csv')
+
+print (result.head())
+
+
+result7 = pd.merge(result, result2, on=['CustomerName', 'ACN', 'ABN'])
+print (result7.count())
+
+
+result7.to_csv("H:/Desktop/rslt.csv")

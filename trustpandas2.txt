@@ -1,0 +1,58 @@
+import pandas as pd
+import re
+import numpy as np
+
+from pandas import ExcelWriter
+
+from pandas import ExcelFile
+
+result = pd.read_excel(r'H:\Desktop\6apr\New folder\trustflag.xlsx', sheet_name = "closure")
+
+print(result.head())
+
+
+result2 = pd.read_excel(r'H:\Desktop\6apr\New folder\trustflag.xlsx', sheet_name = "lookup")
+result3 = pd.read_excel(r'H:\Desktop\6apr\New folder\trustflag.xlsx', sheet_name = "exclude")
+
+
+print(result2.head())
+
+series =  result['Trustfield']
+
+regexpat= result2['Keyword1']
+
+regexpatexcl = result3['keyword4']
+
+
+
+result["flagindicator"] = result.Trustfield.apply(lambda sentence : any (str(word) in str(sentence)  for word in regexpat ))
+
+'''result["flagindicator4"] = result.Trustfield.apply(lambda sentence : any (str(word) in str(sentence)  for word in  regexpatexcl  for word  regexpat   ))'''
+
+
+regex = "STATUTORY TRUST"
+
+result['flagindicator2']  = result['Trustfield'].str.contains('STATUTORY TRUST|TRADING AS|T/AS|T/A',na=False).astype(int)
+
+result['flagindicator3']  = result['Trustfield'].str.contains('TST|A/T/F|T/F|TF|AS T/F|A.T.F|A T F|ATF|ATF|A/T|A/T/F/T|A/T/T|A/TF|AFT|TRSTEE|TUST|TRUST|AS T/F|AS T/T|AS T/TEE|THE TRUSTEE FOR|AS TRUSTEE FOR|AS THE TRSUTEE FOR|AS TREUSTEE FOR|AS TRSUTEE FOR|AS TRUSEE FOR|AS TRUSRTEE FOR|AS TRUSSTEE FOR|AS TRUST FOR|AS TRUSTE FOR|AS TRUSTREE FOR|AS TRUSTEE TO|AS TRUSTEEFOR|AS TRUSTREE FOR|AS TRUTSEE FOR|TEE FOR|ASTRUSTEE FOR|AS TRSUTEE FOR|AS TRUSEE FOR|AS TSTE FOR|ASF|AST|TTF|A / T / F|T RUST|A/S T/F|TRST|AS THE TRSUTEES FOR|A.T .F|A/T FOR|A . T . F|A/T /F|A/TF|TRU ST|A TF|A/ T/F|A. T.F|TRUS T|AT F|AS T/F|AT/FOR|A/T/F|AT/F|A .T.F|A /T/F|TST|',na=False).astype(int)
+
+
+
+
+
+
+'''result.loc[ result['Trustfield'].str.contains('TRADING AS'), 'flagindicator'] = 0
+result.loc[ result['Trustfield'].str.contains('T/AS'), 'flagindicator'] = 0
+
+result.loc[ result['Trustfield'].str.contains('T/A'), 'flagindicator'] = 0'''
+
+
+
+
+'''result.loc[ re.findall( "STATUTORY TRUST", result['Trustfield']) ,'flagindicator']   = 'False'''''
+
+
+print (result)
+
+
+result.to_excel (r'H:\Desktop\15apr\trustflag-closure.xlsx')
